@@ -74,12 +74,12 @@ class V2ex(CheckIn):
             for item in self.check_item.get("cookie").split("; ")
         }
         session = requests.session()
-        if self.check_item.get("proxy", ""):
-            proxies = {
-                "http": self.check_item.get("proxy", ""),
-                "https": self.check_item.get("proxy", ""),
-            }
-            session.proxies.update(proxies)
+        # if self.check_item.get("proxy", ""):
+        #     proxies = {
+        #         "http": self.check_item.get("proxy", ""),
+        #         "https": self.check_item.get("proxy", ""),
+        #     }
+        #     session.proxies.update(proxies)
         requests.utils.add_dict_to_cookiejar(session.cookies, cookie)
         session.headers.update(
             {

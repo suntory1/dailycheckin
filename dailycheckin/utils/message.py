@@ -72,12 +72,40 @@ def message2telegram(tg_api_host, tg_proxy, tg_bot_token, tg_user_id, content):
     return
 
 
-def message2feishu(fskey, content):
+def message2feishu(fskey, fssecret, content):
     print("飞书 推送开始")
-    data = {"msg_type": "text", "content": {"text": content}}
-    requests.post(
-        url=f"https://open.feishu.cn/open-apis/bot/v2/hook/{fskey}", json=data
-    )
+    data = {
+        "msg_type": "interactive",
+        "card": {
+            "config": {
+                "wide_screen_mode": True
+            },
+            "header": {
+                "title": {
+                    "tag": "plain_text",
+                    "content": "每日签到"
+                },
+                "template": "blue"
+            },
+            "elements": [{
+                    "tag": "div",
+                    "text": {
+                        "tag": "lark_md",
+                        "content": content
+                    }
+                }
+            ]
+        }
+    }
+
+    if fssecret:
+        timestamp = str(round(time.time()))
+        string_to_sign = '{}\n{}'.format(timestamp, fssecret)
+        hmac_code = hmac.new(string_to_sign.encode("utf-8"), digestmod=hashlib.sha256).digest()
+        sign = base64.b64encode(hmac_code).decode('utf-8')
+        data["timestamp"] = timestamp
+        data["sign"] = sign
+    requests.post(url=f"https://open.feishu.cn/open-apis/bot/v2/hook/{fskey}", json=data)
     return
 
 
@@ -199,6 +227,7 @@ def push_message(content_list: list, notice_info: dict):
     dingtalk_secret = notice_info.get("dingtalk_secret")
     dingtalk_access_token = notice_info.get("dingtalk_access_token")
     fskey = notice_info.get("fskey")
+    fssecret = notice_info.get("fssecret")
     bark_url = notice_info.get("bark_url")
     sckey = notice_info.get("sckey")
     sendkey = notice_info.get("sendkey")
@@ -223,13 +252,13 @@ def push_message(content_list: list, notice_info: dict):
     merge_push = notice_info.get("merge_push")
     content_str = "\n————————————\n\n".join(content_list)
     message_list = [content_str]
-    try:
-        notice = important_notice()
-        if notice:
-            message_list.append(notice)
-            content_list.append(notice)
-    except Exception as e:
-        print("获取重要通知失败:", e)
+    # try:
+    #     notice = important_notice()
+    #     if notice:
+    #         message_list.append(notice)
+    #         content_list.append(notice)
+    # except Exception as e:
+    #     print("获取重要通知失败:", e)
     if merge_push is None:
         if (
             qmsg_key
@@ -245,6 +274,7 @@ def push_message(content_list: list, notice_info: dict):
             merge_push = True
     if not merge_push:
         message_list = content_list
+    print(f"message_list is {message_list}")
     for message in message_list:
         if qmsg_key:
             try:
@@ -290,7 +320,7 @@ def push_message(content_list: list, notice_info: dict):
                 print("钉钉推送失败", e)
         if fskey:
             try:
-                message2feishu(fskey=fskey, content=message)
+                message2feishu(fskey=fskey, fssecret=fssecret, content=message)
             except Exception as e:
                 print("飞书推送失败", e)
         if sckey:

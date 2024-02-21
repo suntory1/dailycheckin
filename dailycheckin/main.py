@@ -108,18 +108,18 @@ def checkin():
                     content_list.append(f"「{check_name}」\n{e}")
                     print(f"第 {index + 1} 个账号: ❌❌❌❌❌\n{e}")
         print("\n\n")
-        try:
-            url = "https://pypi.org/pypi/dailycheckin/json"
-            latest_version = requests.get(url=url, timeout=30).json()["info"]["version"]
-        except:
-            print("获取最新版本失败")
-            latest_version = "0.0.0"
+        # try:
+        #     url = "https://pypi.org/pypi/dailycheckin/json"
+        #     latest_version = requests.get(url=url, timeout=30).json()["info"]["version"]
+        # except:
+        #     print("获取最新版本失败")
+        #     latest_version = "0.0.0"
         content_list.append(
             f"开始时间: {utc_time}\n"
             f"任务用时: {int(time.time() - start_time)} 秒\n"
-            f"当前版本: {__version__}\n"
-            f"最新版本: {latest_version}\n"
-            f"项目地址: https://github.com/Sitoi/dailycheckin"
+            # f"当前版本: {__version__}\n"
+            # f"最新版本: {latest_version}\n"
+            # f"项目地址: https://github.com/Sitoi/dailycheckin"
         )
         push_message(content_list=content_list, notice_info=notice_info)
         return

@@ -24,6 +24,7 @@ notice_map = {
     "DINGTALK_ACCESS_TOKEN": "",
     "DINGTALK_SECRET": "",
     "FSKEY": "",
+    "FSSECRET": "",
     "PUSHPLUS_TOKEN": "",
     "PUSHPLUS_TOPIC": "",
     "QMSG_KEY": "",

@@ -2,3 +2,6 @@ pycryptodome==3.17
 requests~=2.25.1
 rsa~=4.0
 urllib3~=1.26.2
+beautifulsoup4==4.11.2
+cryptography==36.0.2
+setuptools==41.2.0
