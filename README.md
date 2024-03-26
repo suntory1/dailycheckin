@@ -7,6 +7,7 @@
 基于「Docker」/「青龙面板」/「群晖」/「本地」的每日签到脚本
 
 <!-- SHIELD GROUP -->
+<div id="shield">
 
 [![][github-releases-shield]][github-releases-link]
 [![][pypi-version-shield]][pypi-version-link]
@@ -16,12 +17,15 @@
 [![][github-issues-shield]][github-issues-link]
 [![][github-contributors-shield]][github-contributors-link]
 
+[![][python-version-shield]][python-version-link]
+[![][pypi-dm-shield]][pypi-dm-link]
 [![][docker-pull-shield]][docker-pull-link]
 [![][docker-size-shield]][docker-size-link]
 [![][docker-stars-shield]][docker-stars-link]
-[![][pypi-dm-shield]][pypi-dm-link]
 [![][github-license-shield]][github-license-link]
 
+<!-- SHIELD GROUP -->
+</div>
 </div>
 
 ## ✨ 特性
@@ -91,10 +95,12 @@
 
 ## 📝 License
 
-This project is [MIT](./LICENSE) licensed.
+Copyright © 2021 [Sitoi][profile-link]. <br />
+This project is [MIT](https://github.com/Sitoi/dailycheckin/blob/main/LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
+[profile-link]: https://github.com/sitoi
 [github-codespace-link]: https://codespaces.new/sitoi/dailycheckin
 [github-codespace-shield]: https://github.com/sitoi/dailycheckin/blob/main/images/codespaces.png?raw=true
 [github-contributors-link]: https://github.com/sitoi/dailycheckin/graphs/contributors
@@ -123,7 +129,9 @@ This project is [MIT](./LICENSE) licensed.
 [docker-stars-link]: https://hub.docker.com/repository/docker/sitoi/dailycheckin
 [pypi-dm-shield]: https://img.shields.io/pypi/dm/dailycheckin?label=pypi&labelColor=black&style=flat-square
 [pypi-dm-link]: https://pypi.org/project/dailycheckin/
+[python-version-link]: https://pypi.org/project/dailycheckin/
+[python-version-shield]: https://img.shields.io/pypi/pyversions/dailycheckin?labelColor=black&style=flat-square
 [pypi-version-shield]: https://img.shields.io/pypi/v/dailycheckin?labelColor=black&style=flat-square
 [pypi-version-link]: https://pypi.org/project/dailycheckin/
-[starchart-shield]: https://starchart.cc/Sitoi/dailycheckin.svg
-[starchart-link]: https://starchart.cc/Sitoi/dailycheckin
+[starchart-shield]: https://api.star-history.com/svg?repos=sitoi/dailycheckin&type=Date
+[starchart-link]: https://star-history.com/#sitoi/dailycheckin&Date

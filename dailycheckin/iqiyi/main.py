@@ -106,9 +106,7 @@ class IQIYI(CheckIn):
                 msg = [{"name": "签到天数", "value": _msg}]
             else:
                 try:
-                    msg = [
-                        {"name": "签到天数", "value": res["data"]["data"]["signDays"]}
-                    ]
+                    msg = [{"name": "签到天数", "value": res["data"]["data"]["signDays"]}]
                 except Exception as e:
                     msg = [{"name": "签到天数", "value": str(e)}]
         else:
@@ -125,7 +123,7 @@ class IQIYI(CheckIn):
         task_list = []
         res = requests.get(url=url, params=params).json()
         if res["code"] == "A00000":
-            for item in res["data"]["tasks"]["daily"]:
+            for item in res["data"].get("tasks", {}).get("daily", []):
                 task_list.append(
                     {
                         "taskTitle": item["taskTitle"],
@@ -188,6 +186,23 @@ class IQIYI(CheckIn):
             "P00001": p00001,
             "lotteryType": "0",
             "actCode": "0k9GkUcjqqj4tne8",
+        }
+        params = {
+            "P00001": p00001,
+            "deviceID": str(uuid4()),
+            "version": "15.3.0",
+            "platform": str(uuid4())[:16],
+            "lotteryType": "0",
+            "actCode": "0k9GkUcjqqj4tne8",
+            "extendParams": json.dumps(
+                {
+                    "appIds": "iqiyi_pt_vip_iphone_video_autorenew_12m_348yuan_v2",
+                    "supportSk2Identity": True,
+                    "testMode": "0",
+                    "iosSystemVersion": "17.4",
+                    "bundleId": "com.qiyi.iphone",
+                }
+            ),
         }
         res = requests.get(url, params=params).json()
         msgs = []
@@ -265,12 +280,7 @@ class IQIYI(CheckIn):
             url="https://act.vip.iqiyi.com/level-right/receive", data=data
         ).json()
         msg = res["msg"]
-        return [
-            {
-                "name": "V7 免费升级星钻",
-                "value": msg,
-            }
-        ]
+        return [{"name": "V7 免费升级星钻", "value": msg}]
 
     def start_watch(self, p00001, p00003, dfp):
         total_time = self.get_watch_time(p00001=p00001)
@@ -398,13 +408,31 @@ class IQIYI(CheckIn):
 
     def main(self):
         p00001, p00002, p00003, dfp = self.parse_cookie(self.check_item.get("cookie"))
+        try:
+            user_info = json.loads(unquote(p00002, encoding="utf-8"))
+            user_name = user_info.get("user_name")
+            user_name = user_name.replace(user_name[3:7], "****")
+            nickname = user_info.get("nickname")
+        except Exception as e:
+            print(f"获取账号信息失败，错误信息: {e}")
+            nickname = "未获取到，请检查 Cookie 中 P00002 字段"
+            user_name = "未获取到，请检查 Cookie 中 P00002 字段"
         sign_msg = self.sign(p00001=p00001, p00003=p00003)
-        watch_msg = self.start_watch(p00001=p00001, p00003=p00003, dfp=dfp)
-        level_right_msg = self.level_right(p00001=p00001)
+        _user_msg = self.user_information(p00001=p00001)
+        lotto_lottery_msg = self.lotto_lottery(p00001=p00001)
+        if _user_msg[4].get("value") != "非 VIP 用户":
+            watch_msg = self.start_watch(p00001=p00001, p00003=p00003, dfp=dfp)
+            level_right_msg = self.level_right(p00001=p00001)
+        else:
+            watch_msg = {"name": "视频时长", "value": "非 VIP 用户"}
+            level_right_msg = [
+                {
+                    "name": "V7 免费升级星钻",
+                    "value": "非 VIP 用户",
+                }
+            ]
         chance = self.draw(draw_type=0, p00001=p00001, p00003=p00003)["chance"]
         lottery_msgs = self.lottery(p00001=p00001, award_list=[])
-        lotto_lottery_msg = self.lotto_lottery(p00001=p00001)
-
         if chance:
             draw_msg = ""
             for _ in range(chance):
@@ -417,15 +445,7 @@ class IQIYI(CheckIn):
             task_list = self.query_user_task(p00001=p00001)
             self.join_task(p00001=p00001, task_list=task_list)
             task_msg = self.get_task_rewards(p00001=p00001, task_list=task_list)
-        try:
-            user_info = json.loads(unquote(p00002, encoding="utf-8"))
-            user_name = user_info.get("user_name")
-            user_name = user_name.replace(user_name[3:7], "****")
-            nickname = user_info.get("nickname")
-        except Exception as e:
-            print(f"获取账号信息失败，错误信息: {e}")
-            nickname = "未获取到，请检查 Cookie 中 P00002 字段"
-            user_name = "未获取到，请检查 Cookie 中 P00002 字段"
+
         user_msg = self.user_information(p00001=p00001)
 
         msg = (

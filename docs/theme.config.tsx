@@ -25,11 +25,11 @@ const config: DocsThemeConfig = {
           >
             <stop
               offset="0%"
-              stop-color="#2AABEE"
+              stopColor="#2AABEE"
             />
             <stop
               offset="100%"
-              stop-color="#229ED9"
+              stopColor="#229ED9"
             />
           </linearGradient>
         </defs>
@@ -44,6 +44,15 @@ const config: DocsThemeConfig = {
       </svg>
     ),
   },
+  head: (
+    <>
+      <script
+        async
+        src="https://umami.sitoi.cn/script.js"
+        data-website-id="93cd32e8-03fb-4896-9420-6d9bff2d2359"
+      ></script>
+    </>
+  ),
   footer: {
     text: 'DailyCheckin Docs © 2024',
   },
@@ -63,13 +72,13 @@ const config: DocsThemeConfig = {
     }
   },
   banner: {
-    key: '2024.2.20-release',
+    key: '2024.3.19-release',
     text: (
       <a
-        href="/dailycheckin/history/2024-02-20/"
+        href="/dailycheckin/history/2024-03-19/"
         target="_blank"
       >
-        🎉 DailyCheckIn 2024.2.20 is released. Read more →
+        🎉 DailyCheckIn 2024.3.19 is released. Read more →
       </a>
     ),
   },
