@@ -12,6 +12,29 @@ urllib3.disable_warnings()
 class AliYun(CheckIn):
     name = "阿里云盘"
 
+    ali_rewards = {
+            216: {
+                "type": "extend",
+                "content": 1
+            },
+            223: {
+                "type": "space",
+                "content": 50
+            },
+            224: {
+                "type": "space",
+                "content": 100
+            },
+            225: {
+                "type": "space",
+                "content": 200
+            },
+            231: {
+                "type": "icon",
+                "content": "限定图标"
+            }
+        }
+
     def __init__(self, check_item: dict):
         self.check_item = check_item
 
@@ -19,13 +42,16 @@ class AliYun(CheckIn):
         url = "https://auth.aliyundrive.com/v2/account/token"
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
         response = requests.post(url=url, json=data).json()
+        # print(f"update_token response is ${response}")
         access_token = response.get("access_token")
+        # print(f"access_token is ${access_token}")
         return access_token
 
     def sign(self, access_token):
         url = "https://member.aliyundrive.com/v1/activity/sign_in_list"
         headers = {"Authorization": access_token, "Content-Type": "application/json"}
         result = requests.post(url=url, headers=headers, json={}).json()
+        # print(f"sign result is ${result}")
         sign_days = result["result"]["signInCount"]
         data = {"signInDay": sign_days}
         url_reward = "https://member.aliyundrive.com/v1/activity/sign_in_reward"
@@ -52,12 +78,39 @@ class AliYun(CheckIn):
                                 "name": "阿里云盘",
                                 "value": "获得奖励：{}{}".format(
                                     day_json["reward"]["name"],
-                                    day_json["reward"]["description"],
+                                    day_json["reward"]["notice"],
                                 ),
                             },
                         ]
 
                     return msg
+
+            total_space = 0
+            total_extend = 0
+            reward_icon = ""
+            for i, j in enumerate(result["result"]["signInLogs"]):
+                if j["isReward"]:
+                    reward = self.ali_rewards[j["reward"]["goodsId"]]
+                    if reward["type"] == "space":
+                        total_space += reward["content"]
+                    elif reward["type"] == "extend":
+                        total_extend += reward["content"]
+                    elif reward["type"] == "icon":
+                        reward_icon = j["reward"]["name"]
+
+            msg = [
+                {
+                    "name": "累积签到",
+                    "value": result["result"]["signInCount"]
+                },
+                {
+                    "name": "获得奖励",
+                    "value": "空间 {}M, 延期卡 {} 天, 限定图标 \"{}\"".format(
+                        total_space, total_extend, reward_icon
+                    )
+                }
+            ]
+            return msg
 
     def main(self):
         refresh_token = self.check_item.get("refresh_token")
