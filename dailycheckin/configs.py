@@ -35,6 +35,7 @@ notice_map = {
     "QYWX_KEY": "",
     "QYWX_TOUSER": "",
     "QYWX_MEDIA_ID": "",
+    "QYWX_ORIGIN": "",
     "SCKEY": "",
     "SENDKEY": "",
     "TG_API_HOST": "",
@@ -42,6 +43,12 @@ notice_map = {
     "TG_PROXY": "",
     "TG_USER_ID": "",
     "MERGE_PUSH": "",
+    "GOTIFY_URL": "",
+    "GOTIFY_TOKEN": "",
+    "GOTIFY_PRIORITY": "",
+    "NTFY_URL": "",
+    "NTFY_TOPIC": "",
+    "NTFY_PRIORITY": "",
 }
 
 
